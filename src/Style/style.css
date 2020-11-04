@@ -1,0 +1,18 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+.App span {
+    padding-left: 5px;
+}
+.menu {
+    background-color: #000;
+}
+.menu ul {
+    display: flex;
+    list-style: none;
+}
+.menu ul li {
+    padding: 10px;
+    color: #fff;
+}
