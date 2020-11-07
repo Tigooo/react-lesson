@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
 import './Style/style.css';
-import Product from "./Components/Product";
-import Todo from "./Components/ToDoList/ToDoList";
+// import Product from "./Components/Product";
+import Todo from "./Components/ToDoList/ToDo";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
