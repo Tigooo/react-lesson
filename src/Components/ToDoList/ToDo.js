@@ -1,7 +1,11 @@
 import React from "react";
 import {InputGroup, FormControl, Button, Container, Row, Col, Card} from "react-bootstrap";
-import style from "./style.modul.css";
-// import Task from "./Task";
+import style from "./style.module.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
+import idGenerator from "./idGenerator"
+
+
 
 class ToDo extends React.Component {
     state = {
@@ -16,7 +20,11 @@ class ToDo extends React.Component {
     };
     addTask = () => {
         const {inputValue} = this.state;
-        const tasks = [inputValue, ...this.state.tasks];
+        const newtask = {
+            text: inputValue,
+            _id: idGenerator()
+        };
+        const tasks = [newtask, ...this.state.tasks];
         this.setState({
             tasks: tasks,
             inputValue: ''
@@ -27,18 +35,34 @@ class ToDo extends React.Component {
             this.addTask();
         }
     };
+    removeTask = (taskId)=>{
+        const newtask = this.state.tasks.filter(task => task._id !==taskId);
+        this.setState({
+            tasks:newtask
+        })
+    };
+
+
     render() {
         const {tasks, inputValue} = this.state;
-        const tasksArrey = tasks.map((task, i) => {
+        const tasksArrey = tasks.map((task) => {
             return (
-                <Col key={i} xs={12} sm={6} md={4} lg={3} xl={2}>
+                <Col key={task._id} xs={12} sm={6} md={4} lg={3} xl={2}>
                     <Card className={style.task}>
                         <Card.Body>
-                            <Card.Title>{task.slice(0, 9)}</Card.Title>
+                            <Card.Title>{task.text.slice(0, 9)}</Card.Title>
                             <Card.Text>
-                                {task}
+                                {task.text}
                             </Card.Text>
-                            <Button variant="primary">Go</Button>
+                            <Button
+                                variant="danger"
+                                onClick={()=>this.removeTask(task._id)}
+                            >
+                                <FontAwesomeIcon icon={faTrash} />
+                            </Button>
+                            <Button variant="warning" className={style.editButton}>
+                                <FontAwesomeIcon icon={faEdit} />
+                            </Button>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -61,6 +85,7 @@ class ToDo extends React.Component {
                                 <InputGroup.Append>
                                     <Button variant="primary"
                                             onClick={this.addTask}
+                                            disabled={!inputValue}
                                     >Add</Button>
                                 </InputGroup.Append>
                             </InputGroup>
