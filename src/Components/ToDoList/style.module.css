@@ -2,5 +2,16 @@
     margin: 10px;
 }
 .editButton {
-    margin-left: 5px;
+     margin-left: 5px;
+ }
+.removeButton {
+    margin-left: 0px!important;
+    display: none!important;
+}
+.selcetedTask {
+    box-shadow: 5px 5px 8px -3px rgba(000,000,000, .5);
+    border: #dcdcdc;
+}
+.displayNone {
+display: block!important;
 }

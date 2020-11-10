@@ -1,9 +1,8 @@
 import React from "react";
-import {InputGroup, FormControl, Button, Container, Row, Col, Card} from "react-bootstrap";
-import style from "./style.module.css";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
+import {InputGroup, FormControl, Button, Container, Row, Col} from "react-bootstrap";
 import idGenerator from "./idGenerator"
+import Tasks from "../Tasks/Tasks";
+import style from "./style.module.css";
 
 
 
@@ -11,6 +10,7 @@ class ToDo extends React.Component {
     state = {
         tasks: [],
         inputValue: '',
+        selectedTodo: []
     };
 
     hendleChnge = (event) => {
@@ -42,29 +42,40 @@ class ToDo extends React.Component {
         })
     };
 
+    handleCkeck = (taskid) => {
+        const selectedTodo = new Set(this.state.selectedTodo);
 
+        if (selectedTodo.has(taskid)) {
+            selectedTodo.delete(taskid);
+        }else {
+            selectedTodo.add(taskid);
+        }
+        this.setState({
+            selectedTodo
+        });
+    };
+
+    removeSelected = () => {
+        let tasks = [...this.state.tasks];
+        this.state.selectedTodo.forEach((id)=>{
+            tasks = tasks.filter((task)=> task._id !== id);
+        });
+        this.setState({
+            tasks,
+            selectedTodo: ''
+        });
+    };
     render() {
-        const {tasks, inputValue} = this.state;
+        const {tasks, inputValue, selectedTodo} = this.state;
         const tasksArrey = tasks.map((task) => {
             return (
                 <Col key={task._id} xs={12} sm={6} md={4} lg={3} xl={2}>
-                    <Card className={style.task}>
-                        <Card.Body>
-                            <Card.Title>{task.text.slice(0, 9)}</Card.Title>
-                            <Card.Text>
-                                {task.text}
-                            </Card.Text>
-                            <Button
-                                variant="danger"
-                                onClick={()=>this.removeTask(task._id)}
-                            >
-                                <FontAwesomeIcon icon={faTrash} />
-                            </Button>
-                            <Button variant="warning" className={style.editButton}>
-                                <FontAwesomeIcon icon={faEdit} />
-                            </Button>
-                        </Card.Body>
-                    </Card>
+                    <Tasks
+                        data={task}
+                        remove={this.removeTask}
+                        onCheck= {this.handleCkeck}
+                        disabled = {!!selectedTodo.size}
+                    />
                 </Col>
             )
         });
@@ -72,7 +83,7 @@ class ToDo extends React.Component {
             <div>
                 <Container>
                     <Row>
-                        <Col lg={12}>
+                        <Col  xs={10} sm={10} md={10} lg={10} xl={10} >
                             <InputGroup className="mb-3">
                                 <FormControl
                                     placeholder="Add new task"
@@ -89,6 +100,13 @@ class ToDo extends React.Component {
                                     >Add</Button>
                                 </InputGroup.Append>
                             </InputGroup>
+                        </Col>
+                        <Col xs={2} sm={2} md={2} lg={2} xl={2}>
+                            <Button variant="danger"
+                                    onClick={this.removeSelected}
+                                    className={`${style.removeButton} ${selectedTodo.size ? style.displayNone: ' '}`}
+                                    disabled = {!selectedTodo.size}
+                            >Remove</Button>
                         </Col>
                     </Row>
                     <Row>
